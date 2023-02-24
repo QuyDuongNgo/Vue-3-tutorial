@@ -1,0 +1,62 @@
+version: "3.7"
+
+services:
+  mailhog:
+      image: mailhog/mailhog
+      logging:
+          driver: 'none'
+      ports:
+          - 1025:1025
+          - 8025:8025
+  phpmyadmin:
+      image: phpmyadmin/phpmyadmin
+      ports:
+          - 8081:80
+      links:
+          - mysql
+      environment:
+          - PMA_ARBITRARY=1
+  mysql:
+      image: mysql:8.0
+      volumes:
+          - mysql-data:/var/lib/mysql
+      environment:
+          MYSQL_ROOT_PASSWORD: 1
+          MYSQL_DATABASE: laravel
+  vue-app:
+    # command: >
+    #   sh -c "yarn serve"
+    build:
+      context: .
+      dockerfile: ./docker/frontend/Dockerfile
+    container_name: vue-app
+    # restart: always
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app:cached
+    networks:
+      - vue-network
+  web:
+    tty: true
+    stdin_open: true
+    command: bash
+    build: ./docker
+    links:
+        - mysql
+    ports:
+        - 8088:8000
+    environment:
+        APP_DEBUG: 'true'
+        XDEBUG_MODE: coverage
+        PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/app/vendor/bin
+    volumes:
+        - .:/app:cached
+        - ./docker-dev/web/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+        - ./docker/supervisor/:/etc/supervisor.d/
+volumes:
+    composer_caches:
+    mysql-data:
+networks:
+  vue-network:
+    driver: bridge
