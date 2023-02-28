@@ -14,7 +14,9 @@ class StoreCustomerRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        $user = $this->user();
+
+        return $user != null && $user->tokenCan('customer:create');
     }
 
     /**
@@ -35,7 +37,8 @@ class StoreCustomerRequest extends FormRequest
         ];
     }
 
-    protected function prepareForValidation() {
+    protected function prepareForValidation()
+    {
         $this->merge([
             'postal_code' => $this->postal_code,
         ]);
