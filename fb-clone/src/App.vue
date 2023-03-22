@@ -1,15 +1,14 @@
-<script setup>
-import { RouterLink, RouterView } from "vue-router";
+<script>
+import defaultLayout from "./layouts/default.vue";
+export default {
+  components: {
+    defaultLayout,
+  },
+};
 </script>
 
 <template>
-  <header>
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-      </nav>
-    </div>
-  </header>
+  <defaultLayout>
+    <router-view></router-view>
+  </defaultLayout>
 </template>

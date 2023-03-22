@@ -1,15 +1,21 @@
 <template>
-  <div>
-    <Header />
-    <router-view />
+  <Header></Header>
+  <div class="container">
+    <SideBar></SideBar>
+    <slot></slot>
+    <RightSide></RightSide>
   </div>
 </template>
 
 <script>
-import Headers from "./components/common/layouts/Header";
+import Header from "../components/common/layouts/Header.vue";
+import SideBar from "../components/common/layouts/SideBar.vue";
+import RightSide from "../components/common/layouts/RightSide.vue";
 export default {
   components: {
-    Headers,
+    Header,
+    SideBar,
+    RightSide,
   },
 };
 </script>
